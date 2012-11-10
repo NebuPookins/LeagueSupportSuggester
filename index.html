@@ -627,8 +627,13 @@
 				$.each(suggestion.why, function(index, reason) {
 					$whyList.append('<li>' + reason + '</li>');
 				})
-				$suggestions.append('<tr><td>' + suggestion.points + '</td><td>'
-						+ suggestion.who + '</td><td>' + $whyList.html() + '</td></tr>')
+				var rowHtml = '<tr';
+				if (suggestion.who == supportEnemyVal) {
+					rowHtml += ' class="error"'
+				}
+				rowHtml += '><td>' + suggestion.points + '</td><td>'
+				+ suggestion.who + '</td><td>' + $whyList.html() + '</td></tr>';
+				$suggestions.append(rowHtml);
 			})
 		}
 	});
