@@ -622,7 +622,7 @@
 			})
 			//TODO sort array
 			$suggestions.empty();
-			if (!adcPartnerVal && !supportEnemyVal && !supportEnemyVal) {
+			if (!adcPartnerVal && !adcEnemyVal && !supportEnemyVal) {
 				$suggestions.append('<tr><td colspan="3">Fill out some of the info above to get suggestions on which support to take!</td></tr>');
 			} else {
 				$.each(sortedSuggestions, function(index, suggestion) {
