@@ -558,17 +558,17 @@
 		var $adcEnemy = $('#AdcEnemy');
 		var $supportEnemy = $('#SupportEnemy');
 		var $suggestions = $('#suggestions');
-		$adcPartner.append('<option></option>');
+		$adcPartner.append('<option val=""></option>');
 		for (key in ADCs) {
-			$adcPartner.append('<option val='+key+'>' + key + '</option>');
+			$adcPartner.append('<option val="'+key+'">' + key + '</option>');
 		}
 		$adcEnemy.append('<option></option>');
 		for (key in ADCs) {
-			$adcEnemy.append('<option val='+key+'>' + key + '</option>');
+			$adcEnemy.append('<option val="'+key+'">' + key + '</option>');
 		}
 		$supportEnemy.append('<option></option>');
 		for (key in supports) {
-			$supportEnemy.append('<option val='+key+'>' + key + '</option>');
+			$supportEnemy.append('<option val="'+key+'">' + key + '</option>');
 		}
 		$('.chzn-select').chosen().change(getAdvice);
 		function getAdvice() {
@@ -622,20 +622,38 @@
 			})
 			//TODO sort array
 			$suggestions.empty();
-			$.each(sortedSuggestions, function(index, suggestion) {
-				var $whyList = $('<ul></ul>')
-				$.each(suggestion.why, function(index, reason) {
-					$whyList.append('<li>' + reason + '</li>');
-				})
-				var rowHtml = '<tr';
-				if (suggestion.who == supportEnemyVal) {
-					rowHtml += ' class="error"'
-				}
-				rowHtml += '><td>' + suggestion.points + '</td><td>' + suggestion.who
-						+ '</td><td>' + $whyList.html() + '</td></tr>';
-				$suggestions.append(rowHtml);
-			})
+			if (!adcPartnerVal && !supportEnemyVal && !supportEnemyVal) {
+				$suggestions.append('<tr><td colspan="3">Fill out some of the info above to get suggestions on which support to take!</td></tr>');
+			} else {
+				$.each(sortedSuggestions, function(index, suggestion) {
+					var $whyList = $('<ul></ul>')
+					$.each(suggestion.why, function(index, reason) {
+						$whyList.append('<li>' + reason + '</li>');
+					})
+					var rowHtml = '<tr';
+					if (suggestion.who == supportEnemyVal) {
+						rowHtml += ' class="error"'
+					}
+					rowHtml += '><td>' + suggestion.points + '</td><td>' + suggestion.who
+							+ '</td><td>' + $whyList.html() + '</td></tr>';
+					$suggestions.append(rowHtml);
+				});
+			}
 		}
+		getAdvice();
+		//Reset form
+		var $resetForm = $('#resetForm');
+		$resetForm.click(function() {
+			console.log('got here');
+			$adcPartner.val('');
+			$adcPartner.trigger("liszt:updated");
+			$adcEnemy.val('');
+			$adcEnemy.trigger("liszt:updated");
+			$supportEnemy.val('');
+			$supportEnemy.trigger("liszt:updated");
+			getAdvice();
+			return false;
+		});
 	});
 </script>
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"
@@ -672,6 +690,7 @@ body {
 						class="chzn-select"></select>
 				</div>
 			</div>
+			<a id="resetForm" class="btn btn-danger btn-mini pull-right">Reset</a>
 			<div class="control-group">
 				<label class="control-label" for="SupportEnemy">Enemy
 					Support:</label>
@@ -690,10 +709,6 @@ body {
 					<th>Why</th>
 			</thead>
 			<tbody id="suggestions">
-				<tr>
-					<td colspan="3">Fill out some of the info above to get
-						suggestions on which support to take!</td>
-				</tr>
 			</tbody>
 		</table>
 		<a href="#credits" role="button"
